@@ -65,7 +65,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Y9c-ou-wHI">
-                                <rect key="frame" x="0.0" y="103" width="393" height="715"/>
+                                <rect key="frame" x="0.0" y="159" width="393" height="659"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="UJT-M4-fkf">
                                     <size key="itemSize" width="187" height="276"/>
@@ -111,12 +111,26 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <searchBar contentMode="redraw" placeholder="Search" showsCancelButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zra-wZ-7Yx">
+                                <rect key="frame" x="0.0" y="103" width="393" height="56"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <scopeButtonTitles>
+                                    <string>Title</string>
+                                    <string>Title</string>
+                                </scopeButtonTitles>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="lqt-FO-Egx"/>
+                                </connections>
+                            </searchBar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Y9c-ou-wHI" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Lo9-hj-K8k"/>
+                            <constraint firstItem="Zra-wZ-7Yx" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="5lk-0P-HNy"/>
+                            <constraint firstItem="Y9c-ou-wHI" firstAttribute="top" secondItem="Zra-wZ-7Yx" secondAttribute="bottom" id="LJn-Fm-dWq"/>
+                            <constraint firstItem="Zra-wZ-7Yx" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="O16-fA-9i7"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Y9c-ou-wHI" secondAttribute="trailing" id="THy-HZ-XDM"/>
+                            <constraint firstItem="Zra-wZ-7Yx" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="ZbH-kP-byR"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Y9c-ou-wHI" secondAttribute="bottom" id="nEG-Ou-NF9"/>
                             <constraint firstItem="Y9c-ou-wHI" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="uBv-8S-5yq"/>
                         </constraints>
@@ -124,12 +138,13 @@
                     <navigationItem key="navigationItem" id="o0g-vW-fXc"/>
                     <connections>
                         <outlet property="featuresCollectionView" destination="Y9c-ou-wHI" id="Bc8-Re-cuz"/>
+                        <outlet property="searchBar" destination="Zra-wZ-7Yx" id="zo8-uH-DEf"/>
                         <segue destination="jZi-mQ-gxz" kind="show" identifier="toDetailVC" id="N48-Zu-N1f"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2828.2442748091603" y="4.9295774647887329"/>
+            <point key="canvasLocation" x="2741" y="5"/>
         </scene>
         <!--Details View Controller-->
         <scene sceneID="4Er-HL-vYQ">
@@ -191,7 +206,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fmv-ZZ-cdc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3582.4427480916029" y="4.9295774647887329"/>
+            <point key="canvasLocation" x="3460" y="5"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="HRe-R3-nUL">
@@ -209,7 +224,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mvX-bi-Lhw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1253" y="5"/>
+            <point key="canvasLocation" x="1303" y="5"/>
         </scene>
     </scenes>
     <resources>
