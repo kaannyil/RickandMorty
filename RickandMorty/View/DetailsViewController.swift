@@ -11,6 +11,7 @@ class DetailsViewController: UIViewController {
     @IBOutlet weak var detailsImageView: UIImageView!
     @IBOutlet weak var detailsNameLabel: UILabel!
     @IBOutlet weak var detailsGenderLabel: UILabel!
+    @IBOutlet weak var detailsStatusLabel: UILabel!
     @IBOutlet weak var detailsView: UIView!
     
     var characterDetails: Results?
@@ -40,8 +41,10 @@ class DetailsViewController: UIViewController {
             
             navigationItem.title = character.name
             
-            detailsNameLabel.text = character.name
-            detailsGenderLabel.text = character.gender
+            detailsNameLabel.text = "Name: \(character.name!)"
+            detailsGenderLabel.text = "Gender: \(character.gender!)"
+            detailsStatusLabel.text = "Status: \(character.status!)"
+            
         }
     }
 }

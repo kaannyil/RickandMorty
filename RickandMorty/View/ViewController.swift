@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SkeletonView
 
 class ViewController: UIViewController {
     
@@ -17,6 +18,8 @@ class ViewController: UIViewController {
     
     var resultSearch = [Results]()
     var isSearching = false
+    
+    let defaultRadiusSet: CGFloat = 6
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,15 +40,27 @@ class ViewController: UIViewController {
         layout.minimumInteritemSpacing = 10
         
         featuresCollectionView.collectionViewLayout = layout
+        featuresCollectionView.layer.cornerRadius = defaultRadiusSet
+        
+        searchBar.layer.borderWidth = 1
+        searchBar.layer.borderColor = view.backgroundColor?.cgColor
         
         let url = URL(string: "https://rickandmortyapi.com/api/character")!
         
         takeData(url: url)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        featuresCollectionView.isSkeletonable = true
+        featuresCollectionView.showAnimatedGradientSkeleton(usingGradient:
+                .init(baseColor: .concrete),
+                                                            animation: nil,
+                                                            transition: .crossDissolve(0.25))
+    }
+    
     func takeData(url: URL) {
         // let url = URL(string: "https://rickandmortyapi.com/api/character")!
-        
+
         URLSession.shared.dataTask(with: url) { data, response, error in
             if error != nil || data == nil {
                 print("ERROR !")
@@ -53,17 +68,14 @@ class ViewController: UIViewController {
             }
             
             do {
+                
                 let answer = try JSONDecoder().decode(ResultsAnswer.self, from: data!)
                 self.characterFeatureList.append(contentsOf: answer.results!)
                 
                 if let nextURLString = answer.info.next, let nextURL = URL(string: nextURLString) {
                     self.takeData(url: nextURL)
                 }
-                    
-                /* if let takeCharacterList = answer.results {
-                    self.characterFeatureList = takeCharacterList
-                } */
-             
+                   
                 DispatchQueue.main.async {
                     self.featuresCollectionView.reloadData()
                 }
@@ -72,9 +84,37 @@ class ViewController: UIViewController {
             }
         }.resume()
     }
+    
+    func takeData2(url: URL) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: {
+            URLSession.shared.dataTask(with: url) { data, response, error in
+                if error != nil || data == nil {
+                    print("ERROR !")
+                    return
+                }
+                
+                do {
+                    let answer = try JSONDecoder().decode(ResultsAnswer.self, from: data!)
+                    self.characterFeatureList.append(contentsOf: answer.results!)
+                    
+                    if let nextURLString = answer.info.next, let nextURL = URL(string: nextURLString) {
+                        self.takeData(url: nextURL)
+                    }
+                       
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }.resume()
+            
+            self.featuresCollectionView.stopSkeletonAnimation()
+            self.featuresCollectionView.hideSkeleton()
+            
+            self.featuresCollectionView.reloadData()
+        })
+    }
 }
 
-extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, SkeletonCollectionViewDelegate, SkeletonCollectionViewDataSource {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let index = sender as? Int
@@ -93,6 +133,11 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
+    
+    func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> SkeletonView.ReusableCellIdentifier {
+        return CharacterCollectionViewCell.identifier
+    }
+    
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // print(characterFeatureList.count)
@@ -128,7 +173,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
                 DispatchQueue.main.async {
                     cell.characterImageView.image = UIImage(data: data!)
                     
-                    cell.characterImageView.layer.cornerRadius = 6
+                    cell.characterImageView.layer.cornerRadius = self.defaultRadiusSet
                 }
             }
         }
