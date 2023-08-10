@@ -13,4 +13,5 @@ class CharacterCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var characterNameLabel: UILabel!
     
     static let identifier = "characterCollectionCell"
+    
 }

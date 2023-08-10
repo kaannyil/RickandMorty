@@ -86,12 +86,18 @@
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="166" id="TiK-Ff-ds8"/>
                                                     </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="isSkeletonable" value="YES"/>
+                                                    </userDefinedRuntimeAttributes>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name: Rick" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n3z-e9-yLh">
                                                     <rect key="frame" x="10" y="186" width="167" height="20.333333333333343"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="isSkeletonable" value="YES"/>
+                                                    </userDefinedRuntimeAttributes>
                                                 </label>
                                             </subviews>
                                             <constraints>
@@ -102,8 +108,14 @@
                                                 <constraint firstAttribute="trailing" secondItem="W4A-0p-Mvp" secondAttribute="trailing" constant="10" id="kVB-jn-D0Y"/>
                                                 <constraint firstItem="W4A-0p-Mvp" firstAttribute="leading" secondItem="pyH-Sr-YAD" secondAttribute="leading" constant="10" id="tGD-yF-bUj"/>
                                             </constraints>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="boolean" keyPath="isSkeletonable" value="YES"/>
+                                            </userDefinedRuntimeAttributes>
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="187" height="276"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="isSkeletonable" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
                                             <outlet property="characterImageView" destination="W4A-0p-Mvp" id="wh3-rs-te6"/>
                                             <outlet property="characterNameLabel" destination="n3z-e9-yLh" id="pcY-2M-tVB"/>
@@ -161,9 +173,9 @@
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zWO-SK-euY">
                                         <rect key="frame" x="10" y="10" width="353" height="319"/>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dyK-kh-xKo">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dyK-kh-xKo">
                                         <rect key="frame" x="10" y="339" width="353" height="24"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="20"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -185,6 +197,7 @@
                                     <constraint firstItem="zWO-SK-euY" firstAttribute="leading" secondItem="uIc-CZ-fa7" secondAttribute="leading" constant="10" id="8vU-DM-tss"/>
                                     <constraint firstItem="rZU-op-QNd" firstAttribute="leading" secondItem="uIc-CZ-fa7" secondAttribute="leading" constant="10" id="9bw-Sk-Sfy"/>
                                     <constraint firstItem="ib0-zy-ius" firstAttribute="top" secondItem="dyK-kh-xKo" secondAttribute="bottom" constant="10" id="Idu-s0-8Z6"/>
+                                    <constraint firstAttribute="width" secondItem="uIc-CZ-fa7" secondAttribute="height" multiplier="373:441" id="Ikz-Ib-gSc"/>
                                     <constraint firstAttribute="trailing" secondItem="rZU-op-QNd" secondAttribute="trailing" constant="10" id="NOO-D0-9Rc"/>
                                     <constraint firstItem="dyK-kh-xKo" firstAttribute="top" secondItem="zWO-SK-euY" secondAttribute="bottom" constant="10" id="WJG-lm-yRm"/>
                                     <constraint firstItem="rZU-op-QNd" firstAttribute="top" secondItem="ib0-zy-ius" secondAttribute="bottom" constant="10" id="bQk-ar-GbX"/>
@@ -201,9 +214,9 @@
                         <viewLayoutGuide key="safeArea" id="yD1-ja-WZr"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="yD1-ja-WZr" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="uIc-CZ-fa7" secondAttribute="bottom" constant="20" id="H5W-ZI-akb"/>
                             <constraint firstItem="uIc-CZ-fa7" firstAttribute="top" secondItem="yD1-ja-WZr" secondAttribute="top" constant="20" id="Mtf-EM-Zco"/>
-                            <constraint firstItem="uIc-CZ-fa7" firstAttribute="leading" secondItem="yD1-ja-WZr" secondAttribute="leading" constant="10" id="W1i-KQ-Y2H"/>
-                            <constraint firstItem="yD1-ja-WZr" firstAttribute="trailing" secondItem="uIc-CZ-fa7" secondAttribute="trailing" constant="10" id="ZP9-w5-jNq"/>
+                            <constraint firstItem="uIc-CZ-fa7" firstAttribute="centerX" secondItem="C9R-85-GRm" secondAttribute="centerX" id="XoU-pL-Bug"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="2jm-o3-3Ls"/>

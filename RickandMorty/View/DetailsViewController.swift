@@ -19,12 +19,12 @@ class DetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        detailsView.backgroundColor = UIColor.systemGray6
         detailsImageView.layer.cornerRadius = 6
         
         detailsView.layer.cornerRadius = 6
         detailsView.layer.borderWidth = 0.5
         detailsView.layer.borderColor = UIColor.lightGray.cgColor
-
         
         if let character = characterDetails {
             // Bu kodu resim ismiyle değiştireceksin. Deneyeceksin.
