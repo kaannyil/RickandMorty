@@ -5,12 +5,8 @@
 //  Created by Kaan Yıldırım on 5.08.2023.
 //
 
-import UIKit.UICollectionView
-import UIKit.UISearchBar
-import UIKit.UIScrollView
-
+import UIKit
 import Alamofire
-
 import SkeletonView
 
 class ViewController: UIViewController {
@@ -18,18 +14,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var featuresCollectionView: UICollectionView!
     @IBOutlet weak var searchBar: UISearchBar!
     
+    let characterViewModel = CharacterViewModel()
     var characterFeatureList = [Results]()
-    var currentPage = 1
-    
-    let baseUrl: String = "https://rickandmortyapi.com/api/character"
      
     var resultSearch = [Results]()
     var isSearching = false
     
     let defaultRadiusSet: CGFloat = 6
     let waitSkeletonTime = 2.5
-    
-    let characterViewModel = CharacterViewModel()
     
     // MARK: - LifeCycle
     override func viewDidLoad() {
@@ -58,12 +50,17 @@ class ViewController: UIViewController {
         fetchAllData()
     }
     
+    // Bazen fotoğraflarda yanlış yüklenlemeler oluyor. Bu yüzden
+    // sayfadan ayrıldıktan sonra tekrardan güncelliyorum.
+    override func viewDidDisappear(_ animated: Bool) {
+        DispatchQueue.main.async {
+            self.featuresCollectionView.reloadData()
+        }
+    }
+    
     // MARK: - API Caller
     
     func fetchAllData() {
-        // self.fetchPageWithAlamofire(url: self.baseUrl)
-        // self.fetchPage(url: self.baseUrl)
-        
         takeDataWithGenericLayer()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + waitSkeletonTime, execute: {
@@ -78,116 +75,8 @@ class ViewController: UIViewController {
                                                             animation: nil,
                                                             transition: .crossDissolve(0.5))
     }
-
     
-    /* // MARK: - Single Page Data
-    func takeData(url: URL) {
-        // let url = URL(string: "https://rickandmortyapi.com/api/character")!
-
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                print("Error: \(error.localizedDescription)")
-                return
-            }
-            
-            guard let data = data else {
-                print("No data received !")
-                return
-            }
-            
-            do {
-                
-                let answer = try JSONDecoder().decode(ResultsAnswer.self, from: data)
-                
-                if let character = answer.results {
-                    self.characterFeatureList = character
-                }
-                   
-                DispatchQueue.main.async {
-                    self.featuresCollectionView.reloadData()
-                }
-            } catch {
-                print("JSON Decoding Error: \(error.localizedDescription)")
-            }
-        }.resume()
-    } */
-
-    /* // MARK: - URLSession
-    func fetchPage(url: String) {
-        guard let url = URL(string: url) else {
-            return
-        }
-            
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                print("Error: \(error.localizedDescription)")
-                return
-            }
-            
-            guard let data = data else {
-                print("No data received.")
-                return
-            }
-            
-            do {
-                let decoder = JSONDecoder()
-                let answer = try decoder.decode(ResultsAnswer.self, from: data)
-                
-                
-                if let characters = answer.results {
-                    self.characterFeatureList.append(contentsOf: characters)
-                }
-                
-                if let nextURL = answer.info.next {
-                    self.fetchPage(url: nextURL)
-                } else {
-                    DispatchQueue.main.async {
-                        self.processData()
-                        self.featuresCollectionView.reloadData()
-                    }
-                }
-                
-            } catch {
-                print("JSON decoding error: \(error.localizedDescription)")
-            }
-        }.resume()
-    } */
-    
-    // MARK: - ALAMOFIRE
-    func fetchPageWithAlamofire(url: String) {
-        guard let url = URL(string: url) else {
-            return
-        }
-        
-        AF.request(url, method: .get).responseJSON { response in
-            if let data = response.data {
-                do {
-                    let decoder = JSONDecoder()
-                    let answer = try decoder.decode(ResultsAnswer.self, from: data)
-                    
-                    
-                    /* if let characters = answer.results {
-                        self.characterFeatureList.append(contentsOf: characters)
-                    } */
-                    let characters = answer.results
-                    self.characterFeatureList.append(contentsOf: characters)
-                    
-                    if let nextURL = answer.info.next {
-                        self.fetchPageWithAlamofire(url: nextURL)
-                    } else {
-                        DispatchQueue.main.async {
-                            self.processData()
-                            self.featuresCollectionView.reloadData()
-                        }
-                    }
-                } catch {
-                    print("JSON decoding error: \(error.localizedDescription)")
-                }
-            }
-        }
-    }
-    
-    // MARK: - Generic Network Layer Take Data
+    // MARK: - Generic Network Layer and Take Data with Alamofire
     func takeDataWithGenericLayer() {
         characterViewModel.getCharacterItems { errorMessage in
             if let errorMessage = errorMessage {
@@ -195,7 +84,7 @@ class ViewController: UIViewController {
             }
             
             DispatchQueue.main.async {
-                // self.featuresCollectionView.reloadData()
+                self.featuresCollectionView.reloadData()
             }
         }
     }
@@ -218,7 +107,6 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
             }
         } else {
             if let destinationVC = segue.destination as? DetailsViewController {
-                // destinationVC.characterDetails = characterFeatureList[index!]
                 destinationVC.characterDetails = characterViewModel.getItems[index!]
             }
         }
@@ -235,12 +123,9 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
     
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        // print(characterFeatureList.count)
-        
         if isSearching {
             return resultSearch.count
         } else {
-            // return characterFeatureList.count
             return characterViewModel.getItems.count
         }
     }
@@ -252,7 +137,6 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
         if isSearching {
             character = resultSearch[indexPath.row]
         } else {
-            // character = characterFeatureList[indexPath.row]
             character = characterViewModel.getItems[indexPath.row]
         }
         
@@ -264,21 +148,25 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
         
         cell.characterNameLabel.text = character.name
         
-        if let imageURL = URL(string: "https://rickandmortyapi.com/api/character/avatar/\(character.id!).jpeg") {
-            
-            DispatchQueue.global().async {
+        if let characterID = character.id {
+            if let imageURL = URL(string: "https://rickandmortyapi.com/api/character/avatar/\(characterID).jpeg") {
                 
-                if let data = try? Data(contentsOf: imageURL) {
-                    DispatchQueue.main.async {
-                        
-                        cell.characterImageView.image = UIImage(data: data)
-                        cell.characterImageView.layer.cornerRadius = self.defaultRadiusSet
+                DispatchQueue.global().async {
+                    
+                    if let data = try? Data(contentsOf: imageURL) {
+                        DispatchQueue.main.async {
+                            
+                            cell.characterImageView.image = UIImage(data: data)
+                            cell.characterImageView.layer.cornerRadius = self.defaultRadiusSet
+                        }
                     }
                 }
             }
         }
         
-        cell.characterImageView.image = UIImage(named: character.image!)
+        if let characterImage = character.image {
+            cell.characterImageView.image = UIImage(named: characterImage)
+        }
         
         cell.layer.cornerRadius = 6
         cell.layer.borderColor = UIColor.lightGray.cgColor
@@ -300,22 +188,18 @@ extension ViewController: UISearchBarDelegate {
         if searchText == "" {
             isSearching = false
             
-            // print(characterFeatureList.count)
         } else {
             isSearching = true
 
-            // resultSearch = characterFeatureList.filter({ $0.name?.lowercased().contains(searchText.lowercased()) })
-            
-            /* resultSearch = characterFeatureList.filter { result in
-                let containsSearchText = result.name?.lowercased().contains(searchText.lowercased()) ?? false
-                return containsSearchText
-            } */
             resultSearch = characterViewModel.getItems.filter { result in
                 let containSearchText = result.name?.lowercased().contains(searchText.lowercased()) ?? false
                 return containSearchText
             }
             print(resultSearch.count)
         }
-        featuresCollectionView.reloadData()
+        
+        DispatchQueue.main.async {
+            self.featuresCollectionView.reloadData()
+        }
     }
 }

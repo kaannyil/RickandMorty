@@ -38,6 +38,7 @@ class NetworkManager {
             let decoder = JSONDecoder()
             let RMArray = try decoder.decode(T.self, from: data)
             completion(.success(RMArray))
+            
         } catch let DecodingError {
             print("Decoding Error: \(DecodingError)")
             completion(.failure(.invalidData))

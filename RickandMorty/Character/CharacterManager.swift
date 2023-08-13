@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: - Farklı Yöntemle veriler çekilmek istendiğinde ara katman görevi görecek.
 class CharacterManager {
     static let shared = CharacterManager()
     

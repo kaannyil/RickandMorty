@@ -136,10 +136,10 @@
 		CBD50C082A7E9F160086DE89 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				CBEA6B3B2A80DBC400634162 /* StartViewController.swift */,
 				CBD50BF22A7E99B40086DE89 /* ViewController.swift */,
 				CBEA6B392A7FE1DF00634162 /* DetailsViewController.swift */,
 				CBD50C052A7E9ED40086DE89 /* CharacterCollectionViewCell.swift */,
-				CBEA6B3B2A80DBC400634162 /* StartViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
