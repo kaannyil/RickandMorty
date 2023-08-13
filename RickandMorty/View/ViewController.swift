@@ -9,6 +9,8 @@ import UIKit.UICollectionView
 import UIKit.UISearchBar
 import UIKit.UIScrollView
 
+import Alamofire
+
 import SkeletonView
 
 class ViewController: UIViewController {
@@ -26,8 +28,6 @@ class ViewController: UIViewController {
     
     let defaultRadiusSet: CGFloat = 6
     let waitSkeletonTime = 2.5
-    
-    
     
     // MARK: - LifeCycle
     override func viewDidLoad() {
@@ -54,17 +54,30 @@ class ViewController: UIViewController {
         searchBar.layer.borderColor = UIColor.systemBackground.cgColor
         
         fetchAllData()
+    }
+    
+    // MARK: - API Caller
+    
+    func fetchAllData() {
+        self.fetchPageWithAlamofire(url: self.baseUrl)
+        // self.fetchPage(url: self.baseUrl)
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + waitSkeletonTime, execute: {
+            
+            self.featuresCollectionView.stopSkeletonAnimation()
+            self.featuresCollectionView.hideSkeleton(reloadDataAfter: true,
+                                                     transition: .crossDissolve(0.25))
+        })
+  
         featuresCollectionView.isSkeletonable = true
         featuresCollectionView.showAnimatedGradientSkeleton(usingGradient: .init(baseColor: .silver),
                                                             animation: nil,
                                                             transition: .crossDissolve(0.5))
-        
     }
+
     
-    
-    // Single Page Data
-    /* func takeData(url: URL) {
+    /* // MARK: - Single Page Data
+    func takeData(url: URL) {
         // let url = URL(string: "https://rickandmortyapi.com/api/character")!
 
         URLSession.shared.dataTask(with: url) { data, response, error in
@@ -94,20 +107,8 @@ class ViewController: UIViewController {
             }
         }.resume()
     } */
-    
-    // MARK: - API Caller
-    
-    func fetchAllData() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + waitSkeletonTime, execute: {
-            
-            self.fetchPage(url: self.baseUrl)
-            
-            self.featuresCollectionView.stopSkeletonAnimation()
-            self.featuresCollectionView.hideSkeleton(reloadDataAfter: true,
-                                                     transition: .crossDissolve(0.25))
-        })
-    }
 
+    /* // MARK: - URLSession
     func fetchPage(url: String) {
         guard let url = URL(string: url) else {
             return
@@ -146,12 +147,43 @@ class ViewController: UIViewController {
                 print("JSON decoding error: \(error.localizedDescription)")
             }
         }.resume()
+    } */
+    
+    // MARK: - ALAMOFIRE
+    func fetchPageWithAlamofire(url: String) {
+        guard let url = URL(string: url) else {
+            return
+        }
+        
+        AF.request(url, method: .get).responseJSON { response in
+            if let data = response.data {
+                do {
+                    let decoder = JSONDecoder()
+                    let answer = try decoder.decode(ResultsAnswer.self, from: data)
+                    
+                    
+                    if let characters = answer.results {
+                        self.characterFeatureList.append(contentsOf: characters)
+                    }
+                    
+                    if let nextURL = answer.info.next {
+                        self.fetchPageWithAlamofire(url: nextURL)
+                    } else {
+                        DispatchQueue.main.async {
+                            self.processData()
+                            self.featuresCollectionView.reloadData()
+                        }
+                    }
+                } catch {
+                    print("JSON decoding error: \(error.localizedDescription)")
+                }
+            }
+        }
     }
     
     func processData() {
             print("Total Character: \(characterFeatureList.count)")
     }
-    
 }
 
 // MARK: - CollectionView
@@ -206,9 +238,9 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
                                                                     for: indexPath) as? CharacterCollectionViewCell else {
             return UICollectionViewCell()
         }
+        cell.backgroundColor = UIColor.systemGray5
         
         cell.characterNameLabel.text = character.name
-        cell.backgroundColor = UIColor.systemGray5
         
         if let imageURL = URL(string: "https://rickandmortyapi.com/api/character/avatar/\(character.id!).jpeg") {
             
