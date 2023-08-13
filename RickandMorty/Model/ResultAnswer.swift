@@ -9,6 +9,6 @@ import Foundation
 
 class ResultsAnswer: Codable {
     let info: Info
-    let results: [Results]?
+    let results: [Results]
 }
 

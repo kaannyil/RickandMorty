@@ -29,6 +29,8 @@ class ViewController: UIViewController {
     let defaultRadiusSet: CGFloat = 6
     let waitSkeletonTime = 2.5
     
+    let characterViewModel = CharacterViewModel()
+    
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,8 +61,10 @@ class ViewController: UIViewController {
     // MARK: - API Caller
     
     func fetchAllData() {
-        self.fetchPageWithAlamofire(url: self.baseUrl)
+        // self.fetchPageWithAlamofire(url: self.baseUrl)
         // self.fetchPage(url: self.baseUrl)
+        
+        takeDataWithGenericLayer()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + waitSkeletonTime, execute: {
             
@@ -162,9 +166,11 @@ class ViewController: UIViewController {
                     let answer = try decoder.decode(ResultsAnswer.self, from: data)
                     
                     
-                    if let characters = answer.results {
+                    /* if let characters = answer.results {
                         self.characterFeatureList.append(contentsOf: characters)
-                    }
+                    } */
+                    let characters = answer.results
+                    self.characterFeatureList.append(contentsOf: characters)
                     
                     if let nextURL = answer.info.next {
                         self.fetchPageWithAlamofire(url: nextURL)
@@ -177,6 +183,19 @@ class ViewController: UIViewController {
                 } catch {
                     print("JSON decoding error: \(error.localizedDescription)")
                 }
+            }
+        }
+    }
+    
+    // MARK: - Generic Network Layer Take Data
+    func takeDataWithGenericLayer() {
+        characterViewModel.getCharacterItems { errorMessage in
+            if let errorMessage = errorMessage {
+                print("Error: \(errorMessage)")
+            }
+            
+            DispatchQueue.main.async {
+                // self.featuresCollectionView.reloadData()
             }
         }
     }
@@ -199,7 +218,8 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
             }
         } else {
             if let destinationVC = segue.destination as? DetailsViewController {
-                destinationVC.characterDetails = characterFeatureList[index!]
+                // destinationVC.characterDetails = characterFeatureList[index!]
+                destinationVC.characterDetails = characterViewModel.getItems[index!]
             }
         }
     }
@@ -220,7 +240,8 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
         if isSearching {
             return resultSearch.count
         } else {
-            return characterFeatureList.count
+            // return characterFeatureList.count
+            return characterViewModel.getItems.count
         }
     }
     
@@ -231,7 +252,8 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource,
         if isSearching {
             character = resultSearch[indexPath.row]
         } else {
-            character = characterFeatureList[indexPath.row]
+            // character = characterFeatureList[indexPath.row]
+            character = characterViewModel.getItems[indexPath.row]
         }
         
         guard let cell = featuresCollectionView.dequeueReusableCell(withReuseIdentifier: CharacterCollectionViewCell.identifier,
@@ -284,9 +306,13 @@ extension ViewController: UISearchBarDelegate {
 
             // resultSearch = characterFeatureList.filter({ $0.name?.lowercased().contains(searchText.lowercased()) })
             
-            resultSearch = characterFeatureList.filter { result in
+            /* resultSearch = characterFeatureList.filter { result in
                 let containsSearchText = result.name?.lowercased().contains(searchText.lowercased()) ?? false
                 return containsSearchText
+            } */
+            resultSearch = characterViewModel.getItems.filter { result in
+                let containSearchText = result.name?.lowercased().contains(searchText.lowercased()) ?? false
+                return containSearchText
             }
             print(resultSearch.count)
         }

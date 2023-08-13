@@ -19,7 +19,7 @@ class DetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        detailsView.backgroundColor = UIColor.systemGray6
+        detailsView.backgroundColor = UIColor.systemGray5
         detailsImageView.layer.cornerRadius = 6
         
         detailsView.layer.cornerRadius = 6
@@ -41,7 +41,7 @@ class DetailsViewController: UIViewController {
             
             navigationItem.title = character.name
             
-            detailsNameLabel.text = "Name: \(character.name!)"
+            detailsNameLabel.text = "\(character.name!)"
             detailsGenderLabel.text = "Gender: \(character.gender!)"
             detailsStatusLabel.text = "Status: \(character.status!)"
             
